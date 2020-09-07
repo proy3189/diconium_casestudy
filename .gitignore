@@ -1,0 +1,7 @@
+/build/
+/dist/
+/ki4as_hm.egg-info/
+*.cpython-37.pyc
+*.pyc
+ki4as_hm/__pycache__/
+*.sh
