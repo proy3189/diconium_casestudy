@@ -1,0 +1,5 @@
+opencv
+matplotlib
+numpy
+Pillow
+notebook
