@@ -1,7 +1,7 @@
 /build/
 /dist/
-/ki4as_hm.egg-info/
+/audi_diconium.egg-info/
 *.cpython-37.pyc
 *.pyc
-ki4as_hm/__pycache__/
+audi_diconium/__pycache__/
 *.sh
