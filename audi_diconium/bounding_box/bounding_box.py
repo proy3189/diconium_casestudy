@@ -9,7 +9,6 @@ class BoundingBox:
         self.logger.info("Bounding Box is Intialized")
         self.path = path
 
-
     def skew_sym_matrix(self, u):
         return np.array([[0, -u[2], u[1]],
                          [u[2], 0, -u[0]],
@@ -25,7 +24,7 @@ class BoundingBox:
             bboxes = json.load(f)
 
         boxes = []  # a list for containing bounding boxes
-        self.logger.info("Bounding Box keys: {}". format(bboxes.keys()))
+        self.logger.info("Bounding Box keys: {}".format(bboxes.keys()))
 
         for bbox in bboxes.keys():
             bbox_read = {}  # a dictionary for a given bounding box

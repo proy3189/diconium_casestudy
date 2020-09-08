@@ -11,42 +11,37 @@ class AudiConfigParser():
 
         self.logger = logging.getLogger(AudiConfigParser.__name__)
         self.logger.info("Parser Intialized")
-
         if os.path.exists(path):
             self._dirname = path
             self._bounding_path = self._dirname.replace('cams_lidars.json', 'camera_lidar_semantic_bboxes')
-            print("Bounding path", self._bounding_path)
             self.logger.info("Bounding Path: {}".format(self._bounding_path))
             try:
                 with open(self._dirname, 'r') as f:
-                    self._config = json.load(f)
+                    self._json_config = json.load(f)
             except FileNotFoundError:
                 self.logger.info("File does not exist in path: {}".format(self._dirname))
         else:
             self.get_directory()
+            self.logger.info("Given path does not exist in path. So fetching core path: {}".format(self._dirname))
 
     def get_directory(self):
 
         self._dirname = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe()))).replace("core",
                                                                                                           "data")
         self._dirname = os.path.join(self._dirname, "a2d2", "cams_lidars.json")
-        print("self.dirname", self._dirname)
         self.logger.info("Directory Path: {}".format(self._dirname))
 
         self._bounding_path = self._dirname.replace('cams_lidars.json', 'camera_lidar_semantic_bboxes')
-        print("Bounding path", self._bounding_path)
         self.logger.info("Bounding Path: {}".format(self._bounding_path))
 
         with open(self._dirname, 'r') as f:
-            self._config = json.load(f)
+            self._json_config = json.load(f)
 
     def undistort_image(self, image_ls, cam_name):
         for img in image_ls:
             image = cv2.imread(img)
             mn, basename = os.path.split(img)
             basename = basename.replace('.jpg', '_undistorted.jpg')
-            print("mn , basename", mn, basename)
-            print("BASE", basename.replace('.jpg', '_undistorted.jpg'))
             undistorted_img_path = os.path.join(mn, basename)
 
             if cam_name in ['front_left', 'front_center',
@@ -54,11 +49,11 @@ class AudiConfigParser():
                             'side_right', 'rear_center']:
                 # get parameters from config file
 
-                intr_mat_undist = np.asarray(self._config['cameras'][cam_name]['CamMatrix'])
+                intr_mat_undist = np.asarray(self._json_config['cameras'][cam_name]['CamMatrix'])
 
-                intr_mat_dist = np.asarray(self._config['cameras'][cam_name]['CamMatrixOriginal'])
-                dist_parms = np.asarray(self._config['cameras'][cam_name]['Distortion'])
-                lens = self._config['cameras'][cam_name]['Lens']
+                intr_mat_dist = np.asarray(self._json_config['cameras'][cam_name]['CamMatrixOriginal'])
+                dist_parms = np.asarray(self._json_config['cameras'][cam_name]['Distortion'])
+                lens = self._json_config['cameras'][cam_name]['Lens']
 
                 if (lens == 'Fisheye'):
                     fisheye = cv2.fisheye.undistortImage(image, intr_mat_dist, D=dist_parms, Knew=intr_mat_undist)
